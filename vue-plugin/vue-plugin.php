@@ -11,11 +11,15 @@ function handle_shortcode() {
 }
 add_shortcode('latestPosts', 'handle_shortcode');
 
+?>
+    <script> console.log('<?php setPostViews(get_the_ID()); ?>') </script>
 
+ <?php
 
 function my_stylesheet(){
     wp_register_style('styles', plugin_dir_url( __FILE__ ) .'/assets/style.css');
     wp_enqueue_style('styles');
+}
 //create vue connection 
 function enqueue_scripts(){
    global $post;
@@ -27,7 +31,6 @@ function enqueue_scripts(){
 
 add_action('wp_enqueue_scripts', 'enqueue_scripts'); 
 add_action('wp_enqueue_scripts', 'my_stylesheet' );
-
 add_action('rest_api_init', 'register_rest_images' );
 
 function register_rest_images(){
@@ -48,3 +51,19 @@ function get_rest_featured_image( $object, $field_name, $request ) {
     }
     return false;
 }
+
+add_filter( "rest_post_query", function( $args, $request){
+                if ( isset( $request['category_name']) && !empty($request['category_name'] ) ) {
+                    $args['category_name'] = $request['category_name'];
+                }
+                return $args;
+            }, 10, 2);
+
+add_filter( "rest_post_collection_params", function($query_params, $post_type){
+                $query_params[ 'category_name' ] = array(           
+                    'description' => __( 'Category name.' ),
+                    'type'        => 'string',
+                    'readonly'    => true,
+                );
+                return $query_params;
+            }, 10, 2);
