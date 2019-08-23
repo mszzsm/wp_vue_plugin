@@ -1,0 +1,15 @@
+<?php 
+					 	$link = get_the_author();
+						$exploded_link = explode(" ", $link);
+						$count = count($exploded_link);
+								if( $count < 2 ){
+									$link_to_user = ' ';
+								}
+									else 
+								{
+									$first_latter = $exploded_link[0][0];
+									$first_character_exploded_link = strtolower($first_latter);
+									$link_to_user = $first_character_exploded_link . '.' . strtolower($exploded_link[1]);
+									$user = "<a href="."http://srvsmp0025/employee/?task=employee&action=employeeCard&employee=".$link_to_user.">";
+								}
+					?>
